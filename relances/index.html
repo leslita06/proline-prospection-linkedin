@@ -20,7 +20,7 @@ table{width:100%;border-collapse:collapse;font-size:12.5px}th{background:var(--o
 .s{font-weight:700;border-radius:20px;padding:2px 7px;font-size:11.5px}.s.a{background:#DCFCE7;color:#166534}.s.b{background:#FEF3C7;color:#92400E}.s.c{background:#F3F4F6}
 .todo{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.col{background:#F7F8FA;border-radius:12px;padding:10px}.col h3{margin:4px 4px 10px;font-size:14px}
 .it{background:#fff;border-radius:10px;padding:9px 11px;margin-bottom:8px;border-left:4px solid var(--o);font-size:12.5px}.it b{display:block}.it small{color:var(--g)}
-.funnel div{margin:4px 0;color:#fff;padding:7px 10px;border-radius:6px;font-size:12.5px;font-weight:600;background:var(--o)}
+.funnel div{white-space:nowrap;margin:4px 0;color:#fff;padding:7px 10px;border-radius:6px;font-size:12.5px;font-weight:600;background:var(--o)}
 .auto{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.ac{border:1px solid #EEF0F3;border-radius:12px;padding:12px 14px}.ac h4{margin:0 0 6px;font-size:14px}.ac p{margin:4px 0;font-size:12.5px;line-height:1.45}
 .ok{color:#166534;font-weight:700}.mid{color:#B45309;font-weight:700}.no{color:#B91C1C;font-weight:700}
 footer{font-size:11.5px;color:var(--g);text-align:center;padding:10px}
@@ -50,8 +50,8 @@ const fun=[['Contacts ciblés',D.length],['Invitations envoyées',sent.length],[
 document.getElementById('fun').innerHTML=fun.map(([k,v])=>`<div style="width:${Math.max(v/D.length*100,22)}%">${k} · ${v}</div>`).join('');
 const cnt=(f)=>D.reduce((o,d)=>(o[f(d)]=(o[f(d)]||0)+1,o),{});
 const e={};ET.forEach(x=>{const n=D.filter(d=>d.etape===x).length;if(n)e[x]=n});bars(e,'et');
-const fam={};[...new Set(D.map(d=>d.fam))].forEach(f=>{const c=con.filter(d=>d.fam===f).length,r=rep.filter(d=>d.fam===f).length;fam[f.split(' ')[0]+' '+(f.split(' ')[1]||'')]=c?Math.round(r/c*100):0});bars(fam,'fam',' %');
-bars(cnt(d=>d.resp),'resp');bars(cnt(d=>d.nb+' message'+(d.nb>1?'s':'')),'nb');
+const fam={};[...new Set(D.map(d=>d.fam))].forEach(f=>{const c=con.filter(d=>d.fam===f).length,r=rep.filter(d=>d.fam===f).length;fam[{'Agro-industrie et matières premières':'Agro-industrie','Grande consommation et distribution':'Grande consommation','Pharmacie et santé':'Pharmacie','Industriels et importateurs':'Industriels','Commerce en ligne et retail':'Commerce et retail'}[f]||f]=c?Math.round(r/c*100):0});bars(fam,'fam',' %');
+bars(cnt(d=>d.resp),'resp');{const o={};[0,1,2,3,4].forEach(n=>{const c=D.filter(d=>d.nb===n).length;if(c)o[n+' message'+(n>1?'s':'')]=c});bars(o,'nb')}
 const card=d=>`<div class="it"><b>${d.nom}</b><small>${d.ent} · ${d.etape}</small><br>➡️ ${d.next} · <span class="${d.nd<T?'late':'today'}">${fr(d.nd)}</span> · <a class="li" href="${d.li}" target="_blank">in</a></div>`;
 document.getElementById('c1').innerHTML=late.sort((a,b)=>a.nd<b.nd?-1:1).map(card).join('')||'Rien en retard';
 document.getElementById('c2').innerHTML=D.filter(d=>d.next&&d.nd>=T&&d.nd<='2026-10-31').map(card).join('')||'—';
